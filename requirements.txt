@@ -1,2 +1,6 @@
-numpy>=1.23.5
-pyBigWig>=0.3.22
+numpy>=1.23.5,<3
+pyBigWig>=0.3.22,<0.4
+Pillow>=10,<14
+resvg-py>=0.5,<0.6
+reportlab>=4,<6
+svglib>=1.5,<3
