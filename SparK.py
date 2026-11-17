@@ -1636,15 +1636,31 @@ def _single_args(args, job):
     return current
 
 
+def protect_input_files(args, destinations):
+    inputs = {Path(__file__).resolve()}
+    for key in PATH_OPTIONS:
+        values = args.get(key) or []
+        values = values if isinstance(values,list) else [values]
+        inputs.update(Path(path).resolve() for path in values)
+    paths = [Path(path).resolve() for path in destinations if path]
+    if len(paths)!=len(set(paths)):
+        raise ValueError('Figure outputs and saved settings must use different filenames')
+    if inputs.intersection(paths):
+        raise ValueError('An output or saved configuration must not overwrite an input or the SparK script')
+
+
+def figure_destinations(args):
+    base = str(args['output_name'])
+    return [base+'.'+ext for ext in args['formats']] + ([] if args['no_run_record'] else [base+'.run.json'])
+
+
 def _plot_one(args, quiet=True):
     finalize_arguments(args)
     require_exports(args['formats'])
     base = Path(args['output_name'])
     base.parent.mkdir(parents=True,exist_ok=True)
-    input_paths = {Path(path).resolve() for path in args['control_files']+args['treat_files']+(args.get('bed_files') or [])+([args['gtffile']] if args.get('gtffile') else [])}
     names = {ext:Path(str(base)+'.'+ext) for ext in args['formats']}
-    if any(path.resolve() in input_paths for path in names.values()):
-        raise ValueError('An output must not overwrite an input')
+    protect_input_files(args,figure_destinations(args)+[args.get('save_config')])
     with tempfile.TemporaryDirectory(prefix='.spark-output-',dir=base.parent) as directory:
         staged_args = copy.deepcopy(args)
         staged_args['output_name'] = str(Path(directory)/(base.name+'.svg'))
@@ -1696,6 +1712,7 @@ def plot(region=None, tracks=None, output=None, config=None, quiet=True, **optio
     args = normalize_config(_make_config(config,options))
     if any(args.get(key) for key in ('genes_file','regions_file','regions','genes')):
         return _plot_batch(args,quiet=quiet)
+    protect_input_files(args,figure_destinations(args)+[args.get('save_config')])
     original = copy.deepcopy(args)
     if args.get('gene'):
         resolved,record = resolve_gene(args['gene'],args['gtffile'],args['flank'])
@@ -1781,6 +1798,7 @@ def _plot_batch(args, regions=None, genes=None, quiet=True):
     require_exports(args['formats'])
     jobs = _batch_jobs(args,regions,genes)
     directory = Path(args['output_name'])
+    protect_input_files(args,[directory/'index.html',directory/'batch.run.json',args.get('save_config')])
     directory.mkdir(parents=True,exist_ok=True)
     shared = _batch_scales(args,jobs) if args['batch_shared_scale'] else {}
     results,seen = [],set()
@@ -1807,6 +1825,7 @@ def _plot_batch(args, regions=None, genes=None, quiet=True):
                     scales[group-1] = str(value)
             current['custom_y_axis_scales'] = scales
         try:
+            protect_input_files(args,figure_destinations(current)+[args.get('save_config')])
             result = _plot_one(current,quiet)
             result['name'] = name
             results.append(result)

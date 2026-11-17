@@ -10,6 +10,7 @@
 - Save reproducible run records with code/output hashes, settings, coordinates and input metadata; optionally hash complete inputs.
 - Isolate renderer state and expose `plot`/`plot_many` for Python notebooks. Add an optional local visual interface and tiny synthetic examples.
 - Simplify the README and move advanced instructions into `docs/usage.md`. Add installation metadata and the `spark-plot` command.
+- Reject figure/configuration destinations that would overwrite genomic inputs or the running script.
 - Preserve all 24 established 3.1.0 reference SVGs byte-for-byte. Large genomic inputs remain in place.
 
 ### Upgrade
