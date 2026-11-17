@@ -1,5 +1,22 @@
 # Changes
 
+## 3.2.0
+
+- Save JPG beside SVG automatically. Add optional PNG and vector PDF exports, with staged file replacement and configurable raster DPI/quality.
+- Check the latest published stable GitHub release in a separate background process. Announce newer versions after plotting, without waiting, installing, or failing offline; add opt-out flags.
+- Add reusable JSON settings, explicit command-line overrides, and multiple named conditions with replicates, colors, panel groups and per-input scale factors.
+- Add gene-name/ID lookup, coordinate/BED/gene batches, shared batch scales, HTML previews, and per-job error reporting.
+- Add mean-based difference, ratio and log2-ratio tracks with an explicit comparison pair and pseudocount. These are descriptive transformations, not significance tests.
+- Save reproducible run records with code/output hashes, settings, coordinates and input metadata; optionally hash complete inputs.
+- Isolate renderer state and expose `plot`/`plot_many` for Python notebooks. Add an optional local visual interface and tiny synthetic examples.
+- Simplify the README and move advanced instructions into `docs/usage.md`. Add installation metadata and the `spark-plot` command.
+- Reject figure/configuration destinations that would overwrite genomic inputs or the running script.
+- Preserve all 24 established 3.1.0 reference SVGs byte-for-byte. Large genomic inputs remain in place.
+
+### Upgrade
+
+Install the updated dependencies with `python -m pip install -r requirements.txt`. Python 3.10 or newer is required. Existing plotting commands still work; they now also save `.jpg` and `.run.json`. Use `--no-jpg` or `--no-run-record` to skip those files. The update checker only reports published releases and never changes installed code.
+
 ## 3.1.0
 
 - Add per-input colors for `-f` lists longer than two, and `--track_colors` for any input count. Validate hex colors and color counts. One/two-color `-f` behavior remains control/treatment based. Fixes #28.

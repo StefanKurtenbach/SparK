@@ -4,3 +4,13 @@ TestFiles/
 test-files/
 /.venv/
 /*.svg
+/*.jpg
+/*.png
+/*.pdf
+/*.run.json
+__pycache__/
+*.egg-info/
+build/
+dist/
+examples/demo_output.*
+SparK_GUI_outputs/
