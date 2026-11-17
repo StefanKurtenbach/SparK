@@ -1,0 +1,43 @@
+{
+  "region": "chr1:0-1000",
+  "tracks": [
+    {
+      "file": "demo_data/condition0_rep1.bdg",
+      "condition": "Control",
+      "color": "#005CFF",
+      "group": "Synthetic signal"
+    },
+    {
+      "file": "demo_data/condition0_rep2.bdg",
+      "condition": "Control",
+      "color": "#005CFF",
+      "group": "Synthetic signal"
+    },
+    {
+      "file": "demo_data/condition1_rep1.bdg",
+      "condition": "Drug A",
+      "color": "#DD5500",
+      "group": "Synthetic signal"
+    },
+    {
+      "file": "demo_data/condition1_rep2.bdg",
+      "condition": "Drug A",
+      "color": "#DD5500",
+      "group": "Synthetic signal"
+    },
+    {
+      "file": "demo_data/condition2_rep1.bdg",
+      "condition": "Drug B",
+      "color": "#009E73",
+      "group": "Synthetic signal"
+    },
+    {
+      "file": "demo_data/condition2_rep2.bdg",
+      "condition": "Drug B",
+      "color": "#009E73",
+      "group": "Synthetic signal"
+    }
+  ],
+  "show_plots": "averages",
+  "output_name": "demo_output"
+}
