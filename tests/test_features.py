@@ -88,6 +88,22 @@ class FeatureTests(unittest.TestCase):
         self.assertEqual(svg.read_text(),'old SVG')
         self.assertEqual(jpg.read_bytes(),b'old JPG')
 
+    def test_saved_settings_cannot_overwrite_inputs(self):
+        original=Path(self.files[0]).read_bytes()
+        with self.assertRaisesRegex(ValueError,'overwrite'):
+            spark.plot(config=self.config(save_config=self.files[0]))
+        self.assertEqual(Path(self.files[0]).read_bytes(),original)
+        with self.assertRaisesRegex(ValueError,'different filenames'):
+            spark.plot(config=self.config(save_config=str(self.root/'figure.svg')))
+        self.assertFalse((self.root/'figure.svg').exists())
+
+    def test_batch_saved_settings_cannot_overwrite_regions_file(self):
+        regions=self.root/'regions.bed';regions.write_text('chr1\t0\t10\tfirst\n')
+        original=regions.read_bytes()
+        with self.assertRaisesRegex(ValueError,'overwrite'):
+            spark.plot(config=dict(control_files=self.files[:1],regions_file=str(regions),output_name=str(self.root/'batch'),save_config=str(regions)))
+        self.assertEqual(regions.read_bytes(),original)
+
     def test_input_hashes_are_optional_and_correct(self):
         result = spark.plot(config=self.config(hash_inputs=True))
         record = json.loads(Path(result['outputs']['record']).read_text())
