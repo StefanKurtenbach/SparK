@@ -8,6 +8,9 @@ on:
 permissions:
   contents: read
 
+env:
+  SPARK_NO_UPDATE_CHECK: '1'
+
 jobs:
   test:
     strategy:
@@ -25,3 +28,5 @@ jobs:
           python-version: ${{ matrix.python }}
       - run: python -m pip install -r requirements.txt
       - run: python -m unittest discover -s tests -v
+      - run: python -m pip install --no-deps .
+      - run: spark-plot --version
